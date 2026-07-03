@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  extract-release-notes:
+    runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.notes.outputs.body }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract latest changelog section
+        id: notes
+        run: |
+          # Skip the [Unreleased] section and extract the first real version section
+          body=$(awk '/^## \[Unreleased\]/ { next } /^## \[/ { if (found) exit; found=1; next } found { print }' CHANGELOG.md | sed '/^\[.*\]: /d')
+          # Handle multiline output for GitHub Actions
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$body" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+  create-release:
+    needs: [extract-release-notes, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ needs.extract-release-notes.outputs.body }}
+          draft: false
+          prerelease: false
