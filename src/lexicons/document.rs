@@ -1,5 +1,11 @@
 use serde::{Deserialize, Serialize};
+use crate::lexicons::nsid::Collection;
+use crate::lexicons::nsid::SITE_STANDARD_DOCUMENT;
 use crate::lexicons::types::{Blob, SelfLabel, StrongRef};
+
+impl Collection for Document {
+    const NSID: &'static str = SITE_STANDARD_DOCUMENT;
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]

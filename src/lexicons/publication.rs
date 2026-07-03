@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
+use crate::lexicons::nsid::Collection;
+use crate::lexicons::nsid::SITE_STANDARD_PUBLICATION;
 use crate::lexicons::theme::BasicTheme;
 use crate::lexicons::types::{Blob, SelfLabel};
+
+impl Collection for Publication {
+    const NSID: &'static str = SITE_STANDARD_PUBLICATION;
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
