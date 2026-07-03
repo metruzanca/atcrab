@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use crate::theme::BasicTheme;
-use crate::types::{Blob, SelfLabel};
+use crate::lexicons::theme::BasicTheme;
+use crate::lexicons::types::{Blob, SelfLabel};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]

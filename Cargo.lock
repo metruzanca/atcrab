@@ -18,7 +18,6 @@ name = "atcrab"
 version = "0.1.0"
 dependencies = [
  "hickory-resolver",
- "lexicons",
  "reqwest",
  "serde",
  "serde_json",
@@ -484,14 +483,6 @@ dependencies = [
  "cfg-if",
  "futures-util",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "lexicons"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
 ]
 
 [[package]]

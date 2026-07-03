@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::types::{Blob, SelfLabel, StrongRef};
+use crate::lexicons::types::{Blob, SelfLabel, StrongRef};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
