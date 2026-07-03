@@ -9,6 +9,8 @@ This library started as a personal project and will remain v0.x until the API is
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-03
+
 ### Added
 
 - Handle → DID resolution via HTTP `.well-known/atproto-did` with DNS `_atproto` TXT fallback.
