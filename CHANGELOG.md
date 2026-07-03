@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+This library started as a personal project and will remain v0.x until the API is stable, test coverage is high, and it's fit for general use. AI agents assisted with implementation, but the API design prioritizes idiomatic Rust and ergonomics for human developers.
+
 ## [Unreleased]
 
 ### Added

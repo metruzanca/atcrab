@@ -2,13 +2,15 @@
 
 Rust AT Protocol libraries. Loosely inspired by [Mary](https://github.com/mary-ext)'s [atcute](https://github.com/mary-ext/atcute).
 
+> **Status:** This is a personal project hacked together to scratch an itch. It will remain v0.x until the API is stable, test coverage is high, and I'm confident others can depend on it. At that point I plan to publish to [crates.io](https://crates.io). AI agents contributed to the implementation, but I've steered the API design toward idiomatic Rust and a human-ergonomic developer experience.
+>
 > Do not use this in production. See https://atproto.com/sdks for alternatives.
 
 ## Adding as a dependency
 
 ```toml
 [dependencies]
-atcrab = { git = "https://github.com/<user>/atcrab" }
+atcrab = { git = "https://github.com/metruzanca/atcrab" }
 ```
 
 ## Usage
