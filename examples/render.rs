@@ -59,7 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         println!();
-        println!("uri: {}", record.uri);
+        println!("uri: https://pdsls.dev/{}", record.uri);
         if i < docs.len() - 1 {
             println!();
         }

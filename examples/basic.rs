@@ -10,7 +10,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("\nFound {} document(s):", docs.records.len());
     for record in &docs.records {
-        println!("  [{}] {}", record.value.title, record.uri);
+        println!(
+            "  [{}] https://pdsls.dev/{}",
+            record.value.title, record.uri
+        );
     }
 
     Ok(())
