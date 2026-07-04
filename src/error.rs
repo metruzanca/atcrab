@@ -22,4 +22,10 @@ pub enum Error {
 
     #[error("invalid handle: {0}")]
     InvalidHandle(String),
+
+    #[error("auth error: {0}")]
+    Auth(String),
+
+    #[error("HTTP {}: {}", .0, .1)]
+    Status(reqwest::StatusCode, String),
 }

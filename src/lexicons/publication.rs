@@ -11,7 +11,7 @@ impl Collection for Publication {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Preferences {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     #[serde(rename = "showInDiscover")]
     #[serde(default = "default_true")]
@@ -25,7 +25,7 @@ fn default_true() -> bool {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Publication {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub url: String,
     pub icon: Option<Blob>,

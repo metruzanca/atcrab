@@ -10,3 +10,4 @@ serde_json = "1"
 tokio = { version = "1", features = ["full"] }
 thiserror = "2"
 hickory-resolver = "0.24"
+dotenvy = "0.15"

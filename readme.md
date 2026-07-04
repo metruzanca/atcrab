@@ -6,6 +6,15 @@ Rust AT Protocol libraries.
 >
 > Do not use this in production. See https://atproto.com/sdks for alternatives.
 
+## Features
+
+- **Handle & DID resolution** - resolve any handle to a DID via DNS (`_atproto`) or `.well-known`, then resolve the PDS endpoint from PLC or `did:web` documents
+- **Read records** - fetch records from any collection with built-in pagination and automatic cursor handling
+- **Write records** - create, update, and delete records in your own PDS repository
+  - **Auth** - login with app passwords, auto-loaded from `.env` or environment variables (`ATP_PASSWORD`)
+- **Blob upload** - upload images and other binary data to your PDS
+- **Built-in lexicon types** - ready-to-use types for [standard.site](https://standard.site) lexicons
+
 ## Adding as a dependency
 
 ```toml

@@ -21,7 +21,7 @@ pub struct BlobLink {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StrongRef {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub uri: String,
     pub cid: String,

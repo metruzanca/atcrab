@@ -9,7 +9,7 @@ impl Collection for Subscription {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Subscription {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub publication: String,
     #[serde(rename = "createdAt")]

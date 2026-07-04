@@ -10,7 +10,7 @@ impl Collection for Document {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Contributor {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub did: String,
     pub role: Option<String>,
@@ -21,7 +21,7 @@ pub struct Contributor {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Document {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub site: String,
     pub path: Option<String>,

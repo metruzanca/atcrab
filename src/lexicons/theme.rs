@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Rgb {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub r: u8,
     pub g: u8,
@@ -13,7 +13,7 @@ pub struct Rgb {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Rgba {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub r: u8,
     pub g: u8,
@@ -24,7 +24,7 @@ pub struct Rgba {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct BasicTheme {
-    #[serde(rename = "$type")]
+    #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub background: Rgb,
     pub foreground: Rgb,
