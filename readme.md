@@ -130,11 +130,13 @@ let all   = repo.fetch_all::<Post>("app.bsky.feed.post").await?;
 ## Examples
 
 ```sh
-cargo run --example basic           # fetch standard.site documents with built-in types
-cargo run --example custom_schema   # fetch posts with a user-defined type
-cargo run --example pagination      # cursor-based pagination
-cargo run --example render          # pretty-print leaflet content blocks with facets
-cargo run --example blog            # join publications with their documents
-cargo run --example create_record   # create, update, and delete a record
-cargo run --example upload_blob     # upload a blob to your PDS
+cargo run --example basic               # fetch standard.site documents with built-in types
+cargo run --example custom_schema       # fetch posts with a user-defined type
+cargo run --example pagination          # cursor-based pagination
+cargo run --example render              # pretty-print leaflet content blocks with facets
+cargo run --example blog                # join publications with their documents
+cargo run --example leaflet_overview    # list all publications and their post previews
+cargo run --example leaflet_render      # render a specific publication's posts in plaintext
+cargo run --example create_record       # create, update, and delete a record
+cargo run --example upload_blob         # upload a blob to your PDS
 ```
