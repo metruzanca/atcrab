@@ -13,7 +13,7 @@ Rust AT Protocol libraries.
 - **Write records** - create, update, and delete records in your own PDS repository
   - **Auth** - login with app passwords, auto-loaded from `.env` or environment variables (`ATP_PASSWORD`)
 - **Blob upload** - upload images and other binary data to your PDS
-- **Built-in lexicon types** - ready-to-use types for [standard.site](https://standard.site) lexicons
+- **Built-in lexicon types** - ready-to-use types for [standard.site](https://standard.site) and [Leaflet](https://leaflet.pub) lexicons, with full typed content blocks
 
 ## Adding as a dependency
 
@@ -24,12 +24,12 @@ atcrab = { git = "https://github.com/metruzanca/atcrab" }
 
 ## Usage
 
-### Fetch with built-in types
+### Fetch with built-in types (standard.site)
 
 Built-in lexicon types implement `Collection` so the NSID is inferred:
 
 ```rust
-use atcrab::lexicons::Document;
+use atcrab::lexicons::standard::Document;
 use atcrab::Repo;
 
 #[tokio::main]
@@ -43,16 +43,50 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-**Included types:**
+**Included standard.site types:**
 
 | Lexicon | Type |
 |---|---|
-| `site.standard.document` | `Document`, `Contributor` |
-| `site.standard.publication` | `Publication`, `Preferences` |
-| `site.standard.graph.subscription` | `Subscription` |
-| `site.standard.graph.recommend` | `Recommend` |
-| `site.standard.theme.basic` | `BasicTheme` |
-| `site.standard.theme.color` | `Rgb`, `Rgba` |
+| `site.standard.document` | `standard::Document`, `standard::Content`, `standard::Contributor` |
+| `site.standard.publication` | `standard::Publication`, `standard::Preferences` |
+| `site.standard.graph.subscription` | `standard::Subscription` |
+| `site.standard.graph.recommend` | `standard::Recommend` |
+| `site.standard.theme.basic` | `standard::BasicTheme` |
+| `site.standard.theme.color` | `standard::Rgb`, `standard::Rgba` |
+
+`Document.content` is a tagged `Content` enum — when the document was published via Leaflet, the `Content::Leaflet(LeafletContent)` variant provides fully typed pages and blocks.
+
+### Fetch with built-in types (Leaflet)
+
+```rust
+use atcrab::lexicons::Leaflet;
+use atcrab::Repo;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let repo = Repo::new("metru.dev").await?;
+    let docs = repo.fetch_collection::<Leaflet::Document>().await?;
+    for record in &docs.records {
+        println!("{}", record.value.title);
+    }
+    Ok(())
+}
+```
+
+**Included Leaflet types:**
+
+| Lexicon | Type |
+|---|---|
+| `pub.leaflet.document` | `Leaflet::Document` |
+| `pub.leaflet.publication` | `Leaflet::Publication`, `Leaflet::Preferences`, `Leaflet::PublicationTheme` |
+| `pub.leaflet.publicationPage` | `Leaflet::PublicationPage` |
+| `pub.leaflet.comment` | `Leaflet::Comment` |
+| `pub.leaflet.graph.subscription` | `Leaflet::Subscription` |
+| `pub.leaflet.interactions.recommend` | `Leaflet::Recommend` |
+| `pub.leaflet.poll.definition` | `Leaflet::PollDefinition` |
+| `pub.leaflet.poll.vote` | `Leaflet::PollVote` |
+
+**Content blocks** — `Leaflet::Content` contains `pages: Vec<Leaflet::Page>` (`LinearDocument` / `Canvas`), each with `blocks` of `Leaflet::Block` (22 typed variants including `Text`, `Header`, `Image`, `Blockquote`, `UnorderedList`, etc.). Rich text facets are typed as `Leaflet::Facet` with `Leaflet::FacetFeature` (11 feature variants: `Link`, `Bold`, `Italic`, `Underline`, `Code`, etc.).
 
 **Shared ATProto types:** `Blob`, `BlobLink`, `StrongRef`, `SelfLabel`
 
@@ -96,8 +130,11 @@ let all   = repo.fetch_all::<Post>("app.bsky.feed.post").await?;
 ## Examples
 
 ```sh
-cargo run --example basic           # fetch documents with built-in types
+cargo run --example basic           # fetch standard.site documents with built-in types
 cargo run --example custom_schema   # fetch posts with a user-defined type
 cargo run --example pagination      # cursor-based pagination
-cargo run --example render          # pretty-print documents
+cargo run --example render          # pretty-print leaflet content blocks with facets
+cargo run --example blog            # join publications with their documents
+cargo run --example create_record   # create, update, and delete a record
+cargo run --example upload_blob     # upload a blob to your PDS
 ```
