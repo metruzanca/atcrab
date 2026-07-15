@@ -1,4 +1,5 @@
 pub mod document;
+pub mod leaflet;
 pub mod nsid;
 pub mod publication;
 pub mod recommend;
