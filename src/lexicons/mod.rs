@@ -1,5 +1,6 @@
 pub mod document;
-pub mod leaflet;
+#[allow(non_snake_case)]
+pub mod Leaflet;
 pub mod nsid;
 pub mod publication;
 pub mod recommend;
@@ -7,7 +8,7 @@ pub mod subscription;
 pub mod theme;
 pub mod types;
 
-pub use document::{Contributor, Document};
+pub use document::{Contributor, Content, Document};
 pub use nsid::Collection;
 pub use publication::{Preferences, Publication};
 pub use recommend::Recommend;

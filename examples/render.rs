@@ -1,6 +1,7 @@
+use atcrab::lexicons::Content;
 use atcrab::lexicons::Document;
+use atcrab::lexicons::Leaflet;
 use atcrab::Repo;
-use serde_json::Value;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -75,147 +76,144 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn render_content(value: &Value, depth: usize) {
-    let pages = value.get("pages").and_then(|p| p.as_array());
-
-    match pages {
-        Some(pages) => {
-            for page in pages {
-                let blocks = page.get("blocks").and_then(|b| b.as_array());
-
-                if let Some(blocks) = blocks {
-                    println!();
-                    for block_value in blocks {
-                        let block = block_value.get("block");
-                        if let Some(block) = block {
-                            render_block(block, depth);
+fn render_content(content: &Content, depth: usize) {
+    match content {
+        Content::Leaflet(lc) => {
+            for page in &lc.pages {
+                match page {
+                    Leaflet::Page::LinearDocument(ld) => {
+                        println!();
+                        for lb in &ld.blocks {
+                            render_block(&lb.block, depth);
+                        }
+                    }
+                    Leaflet::Page::Canvas(c) => {
+                        println!();
+                        for cb in &c.blocks {
+                            render_block(&cb.block, depth);
                         }
                     }
                 }
             }
         }
-        None => {
-            // Try rendering as a single block directly
-            if value.get("$type").and_then(|t| t.as_str()).is_some() {
-                render_block(value, depth);
-                return;
-            }
-            // Fallback: unknown content format
-            println!();
-            println!("  (content type not recognized)");
-        }
     }
 }
 
-fn render_block(block: &Value, depth: usize) {
+fn render_block(block: &Leaflet::Block, depth: usize) {
     let indent = "  ".repeat(depth + 1);
 
-    let block_type = block
-        .get("$type")
-        .and_then(|t| t.as_str())
-        .unwrap_or("");
-
-    match block_type {
-        t if t.ends_with(".blocks.header") => {
-            let plaintext = block
-                .get("plaintext")
-                .and_then(|t| t.as_str())
-                .unwrap_or("");
-            let level = block.get("level").and_then(|l| l.as_u64()).unwrap_or(1);
-
-            let prefix = match level {
+    match block {
+        Leaflet::Block::Header(h) => {
+            let prefix = match h.level.unwrap_or(1) {
                 1 => "##",
                 2 => "###",
                 _ => "####",
             };
-
-            let facets = block.get("facets").and_then(|f| f.as_array());
-            if let Some(facets) = facets {
-                let text = apply_facets(plaintext, facets);
-                println!();
-                println!("{indent}{prefix} {text}");
-            } else {
-                println!();
-                println!("{indent}{prefix} {plaintext}");
-            }
+            let text = render_facets(&h.plaintext, h.facets.as_deref());
+            println!();
+            println!("{indent}{prefix} {text}");
         }
-        t if t.ends_with(".blocks.text") => {
-            let plaintext = block
-                .get("plaintext")
-                .and_then(|t| t.as_str())
-                .unwrap_or("");
-            if !plaintext.is_empty() {
-                println!("{indent}{}", plaintext);
+        Leaflet::Block::Text(t) => {
+            if !t.plaintext.is_empty() {
+                println!("{indent}{}", t.plaintext);
             } else {
                 println!();
             }
         }
-        t if t.ends_with(".blocks.page") => {
-            let id = block.get("id").and_then(|i| i.as_str()).unwrap_or("");
-            println!("{indent}(sub-page: {id})");
+        Leaflet::Block::Page(p) => {
+            println!("{indent}(sub-page: {})", p.id);
+        }
+        Leaflet::Block::Image(img) => {
+            println!(
+                "{indent}[image: {}x{}]",
+                img.aspect_ratio.width, img.aspect_ratio.height
+            );
+        }
+        Leaflet::Block::Blockquote(bq) => {
+            let text = render_facets(&bq.plaintext, bq.facets.as_deref());
+            println!("{indent}> {}", text);
+        }
+        Leaflet::Block::HorizontalRule(_) => {
+            println!("{indent}{}", "─".repeat(40));
+        }
+        Leaflet::Block::UnorderedList(ul) => {
+            for item in &ul.children {
+                let text = match &item.content {
+                    Leaflet::Block::Text(t) => {
+                        render_facets(&t.plaintext, t.facets.as_deref())
+                    }
+                    Leaflet::Block::Header(h) => {
+                        render_facets(&h.plaintext, h.facets.as_deref())
+                    }
+                    _ => String::new(),
+                };
+                println!("{indent}  - {}", text);
+            }
+        }
+        Leaflet::Block::OrderedList(ol) => {
+            for (idx, item) in ol.children.iter().enumerate() {
+                let text = match &item.content {
+                    Leaflet::Block::Text(t) => {
+                        render_facets(&t.plaintext, t.facets.as_deref())
+                    }
+                    Leaflet::Block::Header(h) => {
+                        render_facets(&h.plaintext, h.facets.as_deref())
+                    }
+                    _ => String::new(),
+                };
+                let start = ol.start_index.unwrap_or(1) as usize;
+                println!("{indent}  {}. {}", start + idx, text);
+            }
         }
         _ => {
-            // Unknown block type - try plaintext
-            if let Some(plaintext) = block.get("plaintext").and_then(|t| t.as_str()) {
-                println!("{indent}{}", plaintext);
-            }
+            // fallback — try showing a text or name field
         }
     }
 }
 
-fn apply_facets(text: &str, facets: &[Value]) -> String {
+fn render_facets(plaintext: &str, facets: Option<&[Leaflet::Facet]>) -> String {
+    let Some(facets) = facets else {
+        return plaintext.to_string();
+    };
+    if facets.is_empty() {
+        return plaintext.to_string();
+    }
+
+    let text_bytes = plaintext.as_bytes();
     let mut output = String::new();
     let mut last_end: usize = 0;
 
-    // Sort facets by byte start position
-    let mut facets: Vec<_> = facets.iter().collect();
-    facets.sort_by_key(|f| {
-        f.get("index")
-            .and_then(|i| i.get("byteStart"))
-            .and_then(|b| b.as_u64())
-            .unwrap_or(0)
-    });
+    let mut sorted: Vec<_> = facets.iter().collect();
+    sorted.sort_by_key(|f| f.index.byte_start);
 
-    for facet in &facets {
-        let index = facet.get("index");
-        let start = index
-            .and_then(|i| i.get("byteStart"))
-            .and_then(|b| b.as_u64())
-            .map(|n| n as usize)
-            .unwrap_or(0);
-        let end = index
-            .and_then(|i| i.get("byteEnd"))
-            .and_then(|b| b.as_u64())
-            .map(|n| n as usize)
-            .unwrap_or(0);
+    for facet in &sorted {
+        let start = facet.index.byte_start as usize;
+        let end = facet.index.byte_end as usize;
 
-        if let Some(features) = facet.get("features").and_then(|f| f.as_array()) {
-            for feature in features {
-                let link = feature.get("uri").and_then(|u| u.as_str());
+        let has_link = facet.features.iter().any(|f| matches!(f, Leaflet::FacetFeature::Link { .. }));
 
-                // Add text before this facet
-                if start > last_end && start < text.len() {
-                    output.push_str(&text[last_end..start]);
-                }
+        if start > last_end && start < text_bytes.len() {
+            output.push_str(&plaintext[last_end..start]);
+        }
 
-                // Add the linked segment
-                if end <= text.len() && start < end {
-                    let segment = &text[start..end];
-                    if let Some(uri) = link {
+        if end <= text_bytes.len() && start < end {
+            let segment = &plaintext[start..end];
+            if has_link {
+                for feature in &facet.features {
+                    if let Leaflet::FacetFeature::Link { uri } = feature {
                         output.push_str(&format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", uri, segment));
-                    } else {
-                        output.push_str(segment);
                     }
                 }
-
-                last_end = end;
+            } else {
+                output.push_str(segment);
             }
         }
+
+        last_end = end;
     }
 
-    // Add remaining text
-    if last_end < text.len() {
-        output.push_str(&text[last_end..]);
+    if last_end < text_bytes.len() {
+        output.push_str(&plaintext[last_end..]);
     }
 
     output

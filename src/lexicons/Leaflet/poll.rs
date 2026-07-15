@@ -2,17 +2,17 @@ use serde::{Deserialize, Serialize};
 use crate::lexicons::nsid::{Collection, PUB_LEAFLET_POLL_DEFINITION, PUB_LEAFLET_POLL_VOTE};
 use crate::lexicons::types::StrongRef;
 
-impl Collection for LeafletPollDefinition {
+impl Collection for PollDefinition {
     const NSID: &'static str = PUB_LEAFLET_POLL_DEFINITION;
 }
 
-impl Collection for LeafletPollVote {
+impl Collection for PollVote {
     const NSID: &'static str = PUB_LEAFLET_POLL_VOTE;
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletPollDefinition {
+pub struct PollDefinition {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub name: String,
@@ -31,7 +31,7 @@ pub struct PollOption {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletPollVote {
+pub struct PollVote {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub poll: StrongRef,

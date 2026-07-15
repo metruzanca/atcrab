@@ -2,13 +2,13 @@ use serde::{Deserialize, Serialize};
 use crate::lexicons::nsid::{Collection, PUB_LEAFLET_DOCUMENT};
 use crate::lexicons::types::{Blob, StrongRef};
 
-impl Collection for LeafletDocument {
+impl Collection for Document {
     const NSID: &'static str = PUB_LEAFLET_DOCUMENT;
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletDocument {
+pub struct Document {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub title: String,

@@ -2,13 +2,13 @@ use serde::{Deserialize, Serialize};
 use crate::lexicons::nsid::{Collection, PUB_LEAFLET_PUBLICATION};
 use crate::lexicons::types::Blob;
 
-impl Collection for LeafletPublication {
+impl Collection for Publication {
     const NSID: &'static str = PUB_LEAFLET_PUBLICATION;
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletPublication {
+pub struct Publication {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     pub name: String,
@@ -16,13 +16,13 @@ pub struct LeafletPublication {
     pub base_path: Option<String>,
     pub description: Option<String>,
     pub icon: Option<Blob>,
-    pub theme: Option<LeafletPublicationTheme>,
-    pub preferences: Option<LeafletPreferences>,
+    pub theme: Option<PublicationTheme>,
+    pub preferences: Option<Preferences>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletPreferences {
+pub struct Preferences {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
     #[serde(default = "default_true")]
@@ -49,26 +49,26 @@ fn default_false() -> bool {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LeafletPublicationTheme {
+pub struct PublicationTheme {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
     pub r#type: Option<String>,
-    pub background_color: Option<LeafletThemeColor>,
+    pub background_color: Option<ThemeColor>,
     pub background_image: Option<serde_json::Value>,
     pub wordmark: Option<serde_json::Value>,
     pub page_width: Option<u16>,
-    pub primary: Option<LeafletThemeColor>,
-    pub page_background: Option<LeafletThemeColor>,
+    pub primary: Option<ThemeColor>,
+    pub page_background: Option<ThemeColor>,
     #[serde(default)]
     pub show_page_background: bool,
-    pub accent_background: Option<LeafletThemeColor>,
-    pub accent_text: Option<LeafletThemeColor>,
+    pub accent_background: Option<ThemeColor>,
+    pub accent_text: Option<ThemeColor>,
     pub heading_font: Option<String>,
     pub body_font: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
-pub enum LeafletThemeColor {
+pub enum ThemeColor {
     Rgba {
         #[serde(rename = "$type")]
         r#type: String,

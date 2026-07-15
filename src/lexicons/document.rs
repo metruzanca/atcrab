@@ -3,6 +3,8 @@ use crate::lexicons::nsid::Collection;
 use crate::lexicons::nsid::SITE_STANDARD_DOCUMENT;
 use crate::lexicons::types::{Blob, SelfLabel, StrongRef};
 
+use crate::lexicons::Leaflet::content::Content as LeafletContent;
+
 impl Collection for Document {
     const NSID: &'static str = SITE_STANDARD_DOCUMENT;
 }
@@ -19,6 +21,13 @@ pub struct Contributor {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(tag = "$type")]
+pub enum Content {
+    #[serde(rename = "pub.leaflet.content")]
+    Leaflet(LeafletContent),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Document {
     #[serde(rename = "$type", skip_serializing_if = "Option::is_none")]
@@ -29,7 +38,7 @@ pub struct Document {
     pub description: Option<String>,
     #[serde(rename = "coverImage")]
     pub cover_image: Option<Blob>,
-    pub content: Option<serde_json::Value>,
+    pub content: Option<Content>,
     #[serde(rename = "textContent")]
     pub text_content: Option<String>,
     #[serde(rename = "bskyPostRef")]
