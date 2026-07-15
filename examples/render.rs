@@ -1,5 +1,4 @@
-use atcrab::lexicons::Content;
-use atcrab::lexicons::Document;
+use atcrab::lexicons::standard::{Content, Document};
 use atcrab::lexicons::Leaflet;
 use atcrab::Repo;
 

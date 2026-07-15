@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use crate::lexicons::nsid::Collection;
 use crate::lexicons::nsid::SITE_STANDARD_PUBLICATION;
-use crate::lexicons::theme::BasicTheme;
+use crate::lexicons::standard::theme::BasicTheme;
 use crate::lexicons::types::{Blob, SelfLabel};
 
 impl Collection for Publication {

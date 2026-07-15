@@ -1,4 +1,5 @@
-use atcrab::{Repo, lexicons::Document};
+use atcrab::lexicons::standard::Document;
+use atcrab::Repo;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
