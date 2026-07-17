@@ -1,7 +1,6 @@
-#[allow(non_snake_case)]
-pub mod Leaflet;
+pub mod leaflet_pub;
 pub mod nsid;
-pub mod standard;
+pub mod standard_site;
 pub mod types;
 
 pub use nsid::Collection;

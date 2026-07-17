@@ -1,7 +1,7 @@
-use atcrab::lexicons::standard::Content;
-use atcrab::lexicons::standard::Document;
-use atcrab::lexicons::standard::Publication;
-use atcrab::lexicons::Leaflet;
+use atcrab::lexicons::standard_site::Content;
+use atcrab::lexicons::standard_site::Document;
+use atcrab::lexicons::standard_site::Publication;
+use atcrab::lexicons::leaflet_pub;
 use atcrab::Repo;
 
 #[tokio::main]
@@ -43,13 +43,13 @@ fn render_preview(doc: &Document) -> String {
     let Some(page) = lc.pages.first() else {
         return String::new();
     };
-    let Leaflet::Page::LinearDocument(ld) = page else {
+    let leaflet_pub::Page::LinearDocument(ld) = page else {
         return String::new();
     };
     let Some(first) = ld.blocks.first() else {
         return String::new();
     };
-    let Leaflet::Block::Text(t) = &first.block else {
+    let leaflet_pub::Block::Text(t) = &first.block else {
         return String::new();
     };
     let text = t.plaintext.trim();

@@ -1,5 +1,5 @@
-use atcrab::lexicons::standard::{Content, Document};
-use atcrab::lexicons::Leaflet;
+use atcrab::lexicons::standard_site::{Content, Document};
+use atcrab::lexicons::leaflet_pub;
 use atcrab::Repo;
 
 #[tokio::main]
@@ -80,13 +80,13 @@ fn render_content(content: &Content, depth: usize) {
         Content::Leaflet(lc) => {
             for page in &lc.pages {
                 match page {
-                    Leaflet::Page::LinearDocument(ld) => {
+                    leaflet_pub::Page::LinearDocument(ld) => {
                         println!();
                         for lb in &ld.blocks {
                             render_block(&lb.block, depth);
                         }
                     }
-                    Leaflet::Page::Canvas(c) => {
+                    leaflet_pub::Page::Canvas(c) => {
                         println!();
                         for cb in &c.blocks {
                             render_block(&cb.block, depth);
@@ -98,11 +98,11 @@ fn render_content(content: &Content, depth: usize) {
     }
 }
 
-fn render_block(block: &Leaflet::Block, depth: usize) {
+fn render_block(block: &leaflet_pub::Block, depth: usize) {
     let indent = "  ".repeat(depth + 1);
 
     match block {
-        Leaflet::Block::Header(h) => {
+        leaflet_pub::Block::Header(h) => {
             let prefix = match h.level.unwrap_or(1) {
                 1 => "##",
                 2 => "###",
@@ -112,36 +112,36 @@ fn render_block(block: &Leaflet::Block, depth: usize) {
             println!();
             println!("{indent}{prefix} {text}");
         }
-        Leaflet::Block::Text(t) => {
+        leaflet_pub::Block::Text(t) => {
             if !t.plaintext.is_empty() {
                 println!("{indent}{}", t.plaintext);
             } else {
                 println!();
             }
         }
-        Leaflet::Block::Page(p) => {
+        leaflet_pub::Block::Page(p) => {
             println!("{indent}(sub-page: {})", p.id);
         }
-        Leaflet::Block::Image(img) => {
+        leaflet_pub::Block::Image(img) => {
             println!(
                 "{indent}[image: {}x{}]",
                 img.aspect_ratio.width, img.aspect_ratio.height
             );
         }
-        Leaflet::Block::Blockquote(bq) => {
+        leaflet_pub::Block::Blockquote(bq) => {
             let text = render_facets(&bq.plaintext, bq.facets.as_deref());
             println!("{indent}> {}", text);
         }
-        Leaflet::Block::HorizontalRule(_) => {
+        leaflet_pub::Block::HorizontalRule(_) => {
             println!("{indent}{}", "─".repeat(40));
         }
-        Leaflet::Block::UnorderedList(ul) => {
+        leaflet_pub::Block::UnorderedList(ul) => {
             for item in &ul.children {
                 let text = match &item.content {
-                    Leaflet::Block::Text(t) => {
+                    leaflet_pub::Block::Text(t) => {
                         render_facets(&t.plaintext, t.facets.as_deref())
                     }
-                    Leaflet::Block::Header(h) => {
+                    leaflet_pub::Block::Header(h) => {
                         render_facets(&h.plaintext, h.facets.as_deref())
                     }
                     _ => String::new(),
@@ -149,13 +149,13 @@ fn render_block(block: &Leaflet::Block, depth: usize) {
                 println!("{indent}  - {}", text);
             }
         }
-        Leaflet::Block::OrderedList(ol) => {
+        leaflet_pub::Block::OrderedList(ol) => {
             for (idx, item) in ol.children.iter().enumerate() {
                 let text = match &item.content {
-                    Leaflet::Block::Text(t) => {
+                    leaflet_pub::Block::Text(t) => {
                         render_facets(&t.plaintext, t.facets.as_deref())
                     }
-                    Leaflet::Block::Header(h) => {
+                    leaflet_pub::Block::Header(h) => {
                         render_facets(&h.plaintext, h.facets.as_deref())
                     }
                     _ => String::new(),
@@ -170,7 +170,7 @@ fn render_block(block: &Leaflet::Block, depth: usize) {
     }
 }
 
-fn render_facets(plaintext: &str, facets: Option<&[Leaflet::Facet]>) -> String {
+fn render_facets(plaintext: &str, facets: Option<&[leaflet_pub::Facet]>) -> String {
     let Some(facets) = facets else {
         return plaintext.to_string();
     };
@@ -189,7 +189,7 @@ fn render_facets(plaintext: &str, facets: Option<&[Leaflet::Facet]>) -> String {
         let start = facet.index.byte_start as usize;
         let end = facet.index.byte_end as usize;
 
-        let has_link = facet.features.iter().any(|f| matches!(f, Leaflet::FacetFeature::Link { .. }));
+        let has_link = facet.features.iter().any(|f| matches!(f, leaflet_pub::FacetFeature::Link { .. }));
 
         if start > last_end && start < text_bytes.len() {
             output.push_str(&plaintext[last_end..start]);
@@ -199,7 +199,7 @@ fn render_facets(plaintext: &str, facets: Option<&[Leaflet::Facet]>) -> String {
             let segment = &plaintext[start..end];
             if has_link {
                 for feature in &facet.features {
-                    if let Leaflet::FacetFeature::Link { uri } = feature {
+                    if let leaflet_pub::FacetFeature::Link { uri } = feature {
                         output.push_str(&format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", uri, segment));
                     }
                 }

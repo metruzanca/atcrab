@@ -1,4 +1,4 @@
-use atcrab::lexicons::standard::Document;
+use atcrab::lexicons::standard_site::Document;
 use atcrab::Repo;
 
 #[tokio::main]

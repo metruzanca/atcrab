@@ -4,7 +4,7 @@ Example output for each example. Run them yourself with `cargo run --example <na
 
 ## basic
 
-Fetches standard.site documents with built-in `standard::Document` type.
+Fetches standard.site documents with built-in `standard_site::Document` type.
 
 ```
 cargo run --example basic
@@ -86,7 +86,7 @@ fetch_all_collection() → 116 total records across all pages
 
 ## render
 
-Pretty-prints standard.site documents using typed `Leaflet::Block` and `Leaflet::Facet` enums with hyperlink rendering (OSC-8 escape sequences for clickable URLs in supporting terminals).
+Pretty-prints standard.site documents using typed `leaflet_pub::Block` and `leaflet_pub::Facet` enums with hyperlink rendering (OSC-8 escape sequences for clickable URLs in supporting terminals).
 
 ```
 cargo run --example render
@@ -165,7 +165,7 @@ cargo run --example blog
 
 ## leaflet_overview
 
-Lists all publications from metru.dev with a plaintext preview (first text block) for each post, using the typed `Leaflet::Block` enum.
+Lists all publications from metru.dev with a plaintext preview (first text block) for each post, using the typed `leaflet_pub::Block` enum.
 
 ```
 cargo run --example leaflet_overview
@@ -188,7 +188,7 @@ cargo run --example leaflet_overview
 
 ## leaflet_render
 
-Renders a specific publication's posts as plaintext markdown, handling headers, text, blockquotes, images, horizontal rules, lists, and code blocks via the `Leaflet::Block` enum.
+Renders a specific publication's posts as plaintext markdown, handling headers, text, blockquotes, images, horizontal rules, lists, and code blocks via the `leaflet_pub::Block` enum.
 
 ```
 cargo run --example leaflet_render

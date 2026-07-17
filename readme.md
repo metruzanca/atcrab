@@ -29,7 +29,7 @@ atcrab = { git = "https://github.com/metruzanca/atcrab" }
 Built-in lexicon types implement `Collection` so the NSID is inferred:
 
 ```rust
-use atcrab::lexicons::standard::Document;
+use atcrab::lexicons::standard_site::Document;
 use atcrab::Repo;
 
 #[tokio::main]
@@ -47,25 +47,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 | Lexicon | Type |
 |---|---|
-| `site.standard.document` | `standard::Document`, `standard::Content`, `standard::Contributor` |
-| `site.standard.publication` | `standard::Publication`, `standard::Preferences` |
-| `site.standard.graph.subscription` | `standard::Subscription` |
-| `site.standard.graph.recommend` | `standard::Recommend` |
-| `site.standard.theme.basic` | `standard::BasicTheme` |
-| `site.standard.theme.color` | `standard::Rgb`, `standard::Rgba` |
+| `site.standard.document` | `standard_site::Document`, `standard_site::Content`, `standard_site::Contributor` |
+| `site.standard.publication` | `standard_site::Publication`, `standard_site::Preferences` |
+| `site.standard.graph.subscription` | `standard_site::Subscription` |
+| `site.standard.graph.recommend` | `standard_site::Recommend` |
+| `site.standard.theme.basic` | `standard_site::BasicTheme` |
+| `site.standard.theme.color` | `standard_site::Rgb`, `standard_site::Rgba` |
 
 `Document.content` is a tagged `Content` enum — when the document was published via Leaflet, the `Content::Leaflet(LeafletContent)` variant provides fully typed pages and blocks.
 
 ### Fetch with built-in types (Leaflet)
 
 ```rust
-use atcrab::lexicons::Leaflet;
+use atcrab::lexicons::leaflet_pub;
 use atcrab::Repo;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
-    let docs = repo.fetch_collection::<Leaflet::Document>().await?;
+    let docs = repo.fetch_collection::<leaflet_pub::Document>().await?;
     for record in &docs.records {
         println!("{}", record.value.title);
     }
@@ -77,16 +77,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 | Lexicon | Type |
 |---|---|
-| `pub.leaflet.document` | `Leaflet::Document` |
-| `pub.leaflet.publication` | `Leaflet::Publication`, `Leaflet::Preferences`, `Leaflet::PublicationTheme` |
-| `pub.leaflet.publicationPage` | `Leaflet::PublicationPage` |
-| `pub.leaflet.comment` | `Leaflet::Comment` |
-| `pub.leaflet.graph.subscription` | `Leaflet::Subscription` |
-| `pub.leaflet.interactions.recommend` | `Leaflet::Recommend` |
-| `pub.leaflet.poll.definition` | `Leaflet::PollDefinition` |
-| `pub.leaflet.poll.vote` | `Leaflet::PollVote` |
+| `pub.leaflet.document` | `leaflet_pub::Document` |
+| `pub.leaflet.publication` | `leaflet_pub::Publication`, `leaflet_pub::Preferences`, `leaflet_pub::PublicationTheme` |
+| `pub.leaflet.publicationPage` | `leaflet_pub::PublicationPage` |
+| `pub.leaflet.comment` | `leaflet_pub::Comment` |
+| `pub.leaflet.graph.subscription` | `leaflet_pub::Subscription` |
+| `pub.leaflet.interactions.recommend` | `leaflet_pub::Recommend` |
+| `pub.leaflet.poll.definition` | `leaflet_pub::PollDefinition` |
+| `pub.leaflet.poll.vote` | `leaflet_pub::PollVote` |
 
-**Content blocks** — `Leaflet::Content` contains `pages: Vec<Leaflet::Page>` (`LinearDocument` / `Canvas`), each with `blocks` of `Leaflet::Block` (22 typed variants including `Text`, `Header`, `Image`, `Blockquote`, `UnorderedList`, etc.). Rich text facets are typed as `Leaflet::Facet` with `Leaflet::FacetFeature` (11 feature variants: `Link`, `Bold`, `Italic`, `Underline`, `Code`, etc.).
+**Content blocks** — `leaflet_pub::Content` contains `pages: Vec<leaflet_pub::Page>` (`LinearDocument` / `Canvas`), each with `blocks` of `leaflet_pub::Block` (22 typed variants including `Text`, `Header`, `Image`, `Blockquote`, `UnorderedList`, etc.). Rich text facets are typed as `leaflet_pub::Facet` with `leaflet_pub::FacetFeature` (11 feature variants: `Link`, `Bold`, `Italic`, `Underline`, `Code`, etc.).
 
 **Shared ATProto types:** `Blob`, `BlobLink`, `StrongRef`, `SelfLabel`
 

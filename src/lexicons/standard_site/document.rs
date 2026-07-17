@@ -3,7 +3,7 @@ use crate::lexicons::nsid::Collection;
 use crate::lexicons::nsid::SITE_STANDARD_DOCUMENT;
 use crate::lexicons::types::{Blob, SelfLabel, StrongRef};
 
-use crate::lexicons::Leaflet::content::Content as LeafletContent;
+use crate::lexicons::leaflet_pub::content::Content as LeafletContent;
 
 impl Collection for Document {
     const NSID: &'static str = SITE_STANDARD_DOCUMENT;

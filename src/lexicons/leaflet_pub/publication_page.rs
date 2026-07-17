@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::lexicons::nsid::{Collection, PUB_LEAFLET_PUBLICATION_PAGE};
-use crate::lexicons::Leaflet::content::Content;
+use crate::lexicons::leaflet_pub::content::Content;
 
 impl Collection for PublicationPage {
     const NSID: &'static str = PUB_LEAFLET_PUBLICATION_PAGE;
