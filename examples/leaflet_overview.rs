@@ -1,15 +1,12 @@
-use atcrab::lexicons::standard_site::Content;
-use atcrab::lexicons::standard_site::Document;
-use atcrab::lexicons::standard_site::Publication;
-use atcrab::lexicons::leaflet_pub;
+use atcrab::lexicons::{leaflet_pub, standard_site};
 use atcrab::Repo;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let publications = repo.fetch_all::<Publication>().await?;
-    let docs = repo.fetch_all::<Document>().await?;
+    let publications = repo.fetch_all::<standard_site::Publication>().await?;
+    let docs = repo.fetch_all::<standard_site::Document>().await?;
 
     for pub_record in &publications {
         let p = &pub_record.value;
@@ -35,11 +32,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn render_preview(doc: &Document) -> String {
+fn render_preview(doc: &standard_site::Document) -> String {
     let Some(content) = &doc.content else {
         return doc.text_content.clone().unwrap_or_default();
     };
-    let Content::Leaflet(lc) = content;
+    let standard_site::Content::Leaflet(lc) = content;
     let Some(page) = lc.pages.first() else {
         return String::new();
     };

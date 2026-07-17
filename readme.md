@@ -29,13 +29,13 @@ atcrab = { git = "https://github.com/metruzanca/atcrab" }
 Built-in lexicon types implement `Collection` so the NSID is inferred:
 
 ```rust
-use atcrab::lexicons::standard_site::Document;
+use atcrab::lexicons::standard_site;
 use atcrab::Repo;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
-    let docs = repo.fetch::<Document>().await?;
+    let docs = repo.fetch::<standard_site::Document>().await?;
     for record in &docs.records {
         println!("{} ({})", record.value.title, record.uri);
     }

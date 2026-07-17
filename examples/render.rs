@@ -1,12 +1,11 @@
-use atcrab::lexicons::standard_site::{Content, Document};
-use atcrab::lexicons::leaflet_pub;
+use atcrab::lexicons::{leaflet_pub, standard_site};
 use atcrab::Repo;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let docs = repo.fetch_all::<Document>().await?;
+    let docs = repo.fetch_all::<standard_site::Document>().await?;
 
     for (i, record) in docs.iter().enumerate() {
         let doc = &record.value;
@@ -75,9 +74,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn render_content(content: &Content, depth: usize) {
+fn render_content(content: &standard_site::Content, depth: usize) {
     match content {
-        Content::Leaflet(lc) => {
+        standard_site::Content::Leaflet(lc) => {
             for page in &lc.pages {
                 match page {
                     leaflet_pub::Page::LinearDocument(ld) => {

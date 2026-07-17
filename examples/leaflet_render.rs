@@ -1,7 +1,4 @@
-use atcrab::lexicons::standard_site::Content;
-use atcrab::lexicons::standard_site::Document;
-use atcrab::lexicons::standard_site::Publication;
-use atcrab::lexicons::leaflet_pub;
+use atcrab::lexicons::{leaflet_pub, standard_site};
 use atcrab::Repo;
 
 const PUB_URI: &str =
@@ -11,7 +8,7 @@ const PUB_URI: &str =
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let publications = repo.fetch_all::<Publication>().await?;
+    let publications = repo.fetch_all::<standard_site::Publication>().await?;
     let Some(pub_record) = publications.iter().find(|r| r.uri == PUB_URI) else {
         println!("Publication not found: {PUB_URI}");
         return Ok(());
@@ -24,7 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     println!();
 
-    let docs = repo.fetch_all::<Document>().await?;
+    let docs = repo.fetch_all::<standard_site::Document>().await?;
     let posts: Vec<_> = docs.iter().filter(|r| r.value.site == PUB_URI).collect();
 
     if posts.is_empty() {
@@ -61,8 +58,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn render_content(content: &Content) {
-    let Content::Leaflet(lc) = content;
+fn render_content(content: &standard_site::Content) {
+    let standard_site::Content::Leaflet(lc) = content;
 
     for page in &lc.pages {
         match page {
