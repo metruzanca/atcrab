@@ -11,7 +11,7 @@ const PUB_URI: &str =
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let publications = repo.fetch_all_collection::<Publication>().await?;
+    let publications = repo.fetch_all::<Publication>().await?;
     let Some(pub_record) = publications.iter().find(|r| r.uri == PUB_URI) else {
         println!("Publication not found: {PUB_URI}");
         return Ok(());
@@ -24,7 +24,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     println!();
 
-    let docs = repo.fetch_all_collection::<Document>().await?;
+    let docs = repo.fetch_all::<Document>().await?;
     let posts: Vec<_> = docs.iter().filter(|r| r.value.site == PUB_URI).collect();
 
     if posts.is_empty() {

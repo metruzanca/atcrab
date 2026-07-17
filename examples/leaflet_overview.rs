@@ -8,8 +8,8 @@ use atcrab::Repo;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let publications = repo.fetch_all_collection::<Publication>().await?;
-    let docs = repo.fetch_all_collection::<Document>().await?;
+    let publications = repo.fetch_all::<Publication>().await?;
+    let docs = repo.fetch_all::<Document>().await?;
 
     for pub_record in &publications {
         let p = &pub_record.value;

@@ -6,7 +6,7 @@ use atcrab::Repo;
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let docs = repo.fetch_all_collection::<Document>().await?;
+    let docs = repo.fetch_all::<Document>().await?;
 
     for (i, record) in docs.iter().enumerate() {
         let doc = &record.value;

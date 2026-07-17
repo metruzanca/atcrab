@@ -16,7 +16,7 @@ impl Collection for Post {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
 
-    let posts = repo.fetch_collection::<Post>().await?;
+    let posts = repo.fetch::<Post>().await?;
 
     println!("Found {} post(s):", posts.records.len());
     for record in &posts.records {

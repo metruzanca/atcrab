@@ -35,7 +35,7 @@ use atcrab::Repo;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
-    let docs = repo.fetch_collection::<Document>().await?;
+    let docs = repo.fetch::<Document>().await?;
     for record in &docs.records {
         println!("{} ({})", record.value.title, record.uri);
     }
@@ -65,7 +65,7 @@ use atcrab::Repo;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
-    let docs = repo.fetch_collection::<leaflet_pub::Document>().await?;
+    let docs = repo.fetch::<leaflet_pub::Document>().await?;
     for record in &docs.records {
         println!("{}", record.value.title);
     }
@@ -108,23 +108,23 @@ impl Collection for Post {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let repo = Repo::new("metru.dev").await?;
-    let posts = repo.fetch_collection::<Post>().await?;
+    let posts = repo.fetch::<Post>().await?;
     println!("{} posts", posts.records.len());
     Ok(())
 }
 ```
 
-### Low-level API
+### Explicit collection
 
 If you don't want to implement `Collection`, pass the NSID directly:
 
 ```rust
 // first page
-let posts = repo.fetch::<Post>("app.bsky.feed.post").await?;
+let posts = repo.fetch_collection::<Post>("app.bsky.feed.post").await?;
 // next page from cursor
-let posts = repo.fetch_cursor::<Post>("app.bsky.feed.post", cursor).await?;
+let posts = repo.fetch_collection_cursor::<Post>("app.bsky.feed.post", cursor).await?;
 // all pages
-let all   = repo.fetch_all::<Post>("app.bsky.feed.post").await?;
+let all   = repo.fetch_all_collection::<Post>("app.bsky.feed.post").await?;
 ```
 
 ## Examples

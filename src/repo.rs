@@ -163,7 +163,7 @@ impl Repo {
         url
     }
 
-    pub async fn fetch<T: DeserializeOwned>(
+    pub async fn fetch_collection<T: DeserializeOwned>(
         &self,
         collection: &str,
     ) -> Result<ListRecords<T>, Error> {
@@ -173,7 +173,7 @@ impl Repo {
         Ok(body)
     }
 
-    pub async fn fetch_cursor<T: DeserializeOwned>(
+    pub async fn fetch_collection_cursor<T: DeserializeOwned>(
         &self,
         collection: &str,
         cursor: &str,
@@ -184,7 +184,7 @@ impl Repo {
         Ok(body)
     }
 
-    pub async fn fetch_all<T: DeserializeOwned>(
+    pub async fn fetch_all_collection<T: DeserializeOwned>(
         &self,
         collection: &str,
     ) -> Result<Vec<Record<T>>, Error> {
@@ -207,22 +207,22 @@ impl Repo {
         Ok(all_records)
     }
 
-    pub async fn fetch_collection<T: Collection>(
+    pub async fn fetch<T: Collection>(
         &self,
     ) -> Result<ListRecords<T>, Error> {
-        self.fetch::<T>(T::NSID).await
+        self.fetch_collection::<T>(T::NSID).await
     }
 
-    pub async fn fetch_collection_cursor<T: Collection>(
+    pub async fn fetch_cursor<T: Collection>(
         &self,
         cursor: &str,
     ) -> Result<ListRecords<T>, Error> {
-        self.fetch_cursor::<T>(T::NSID, cursor).await
+        self.fetch_collection_cursor::<T>(T::NSID, cursor).await
     }
 
-    pub async fn fetch_all_collection<T: Collection>(
+    pub async fn fetch_all<T: Collection>(
         &self,
     ) -> Result<Vec<Record<T>>, Error> {
-        self.fetch_all::<T>(T::NSID).await
+        self.fetch_all_collection::<T>(T::NSID).await
     }
 }

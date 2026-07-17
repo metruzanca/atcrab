@@ -62,7 +62,7 @@ I'm building small features at a time and iterating. No need for an expensive mo
 
 ## pagination
 
-Demonstrates cursor-based pagination with `fetch_collection`, `fetch_collection_cursor`, and `fetch_all_collection`.
+Demonstrates cursor-based pagination with `fetch`, `fetch_cursor`, and `fetch_all`.
 
 ```
 cargo run --example pagination
